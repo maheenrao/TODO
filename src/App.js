@@ -27,79 +27,30 @@ const dataTodo = [
 
 function App() {
   const [AddItem, setAddItem] = useState(dataTodo);
- const [isLoading, setIsLoading] = useState(false);
- const [error, setError] = useState(null);
-     const addTodoHandler = useCallback(async () => {
-       setIsLoading(true);
-       setError(null);
-       try {
-         const response = await fetch("/todos");
-         if (!response.ok) {
-           throw new Error("Something went wrong!");
-         }
-
-         const data = await response.json();
-
-         const transformm = data.results.map((data) => {
-           return {
-             id: data.id,
-             title: data.title,
-           };
-         });
-         setAddItem(transformm);
-       } catch (error) {
-         setError(error.message);
-       }
-       setIsLoading(false);
-     }, []);
-
-     useEffect(() => {
-       addTodoHandler();
-     }, [addTodoHandler]);
-
-     let content = <p>Found no data.</p>;
-
-     if (AddItem.length > 0) {
-       content = <TodoList data={AddItem} />;
-     }
-
-     if (error) {
-       content = <p>{error}</p>;
-     }
-
-     if (isLoading) {
-       content = <p>Loading...</p>;
-     }
-
-
-//    setAddItem((prevItem) => {
-//      return [item, ...prevItem];
-//    });
-//  };
-
+ 
  //GET Req
 
-//  useEffect(() => {
-//    fetch("/todos")
-//      .then((response) => response.json())
+ useEffect(() => {
+   fetch("/todos")
+     .then((response) => response.json())
      
-//      .then((responseData) => {
-//        const loadedItems = [];
-//        for (const key in responseData) {
-//          loadedItems.push({
-//            id: key,
-//           //  title: responseData[key].title,
-//          });
-//        }
-//        setAddItem(loadedItems);
-//      });
-//  }, [AddItem]);
+     .then((responseData) => {
+       const loadedItems = [];
+       for (const key in responseData) {
+         loadedItems.push({
+           id: key,
+           title: responseData[key].title,
+         });
+       }
+       setAddItem(loadedItems);
+     });
+ }, [AddItem]);
 
 
 
-//  useEffect(() => {
-//    console.log("TODOS", AddItem);
-//  }, [AddItem]);
+ useEffect(() => {
+   console.log("TODOS", AddItem);
+ }, [AddItem]);
 
         
   const deleteItem = (id) => {
